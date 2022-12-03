@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 module.exports = {
-  development: {
+  production: {
     "username": process.env.PGUSER,
     "password": process.env.PGPASSWORD,
     "database": process.env.PGDATABASE,
