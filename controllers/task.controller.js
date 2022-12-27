@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     tasks.findAll(
         {
             where:{
-                userId: req.user.id
+                userId: jwt.verify(token, process.env.TOKEN_SECRET).id
             }
         }
     )
@@ -31,10 +31,10 @@ router.delete('/:id', async (req,res)  => {
     })
     .then(data => {
         if (data >= 1){
-            res.send({message: 'Tarea eliminada exitosamente'})
+            res.send({message: 'Task deleted succesfully!'})
         }
         else{
-            res.status(404).send({message: 'Tarea no encontrada'})
+            res.status(404).send({message: 'Task was not found!'})
         }
     })
     .catch(err=>{res.status(404).send({message:err.message})})
@@ -42,19 +42,20 @@ router.delete('/:id', async (req,res)  => {
 
 router.post('/', async (req, res) => {
     const tasks = db.Tasklists
+    const token = req.header('Authorization')
     let newTask = {
         description: req.body.description,
         priorityType :req.body.priority,
         status: req.body.status,
         order: req.body.order,
-        userId: req.user.id
+        userId: jwt.verify(token, process.env.TOKEN_SECRET).id
     }
     tasks.create(newTask)
     .then(data => {
         res.send(data)
     })
     .catch(err=>{
-        res.status(500).send({message: 'Ocurrió un error, por favor intente nuevamente'})
+        res.status(500).send({message: 'An error occured, please try again!'})
     })
 })
 

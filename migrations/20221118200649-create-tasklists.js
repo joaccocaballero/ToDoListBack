@@ -7,7 +7,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       id: {
         type: Sequelize.BIGINT
@@ -20,6 +20,9 @@ module.exports = {
       },
       status:{
         type: Sequelize.BOOLEAN
+      },
+      order:{
+        type: Sequelize.INTEGER
       },
       createdAt: {
         type: Sequelize.DATE
