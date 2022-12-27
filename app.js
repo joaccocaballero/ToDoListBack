@@ -15,7 +15,7 @@ app.use(cors())
 app.use(express.json())
 app.use(middlewares);
 app.use('/tasks',verifyToken,taskRoutes)
-app.use('/',logUser)
+app.use('/auth',logUser)
 
 
 app.listen(port, () => {

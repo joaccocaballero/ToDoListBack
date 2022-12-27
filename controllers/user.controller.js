@@ -7,8 +7,6 @@ const router = express.Router();
 const db = require('../models/index');
 const jwt = require('jsonwebtoken')
 
-
-
 //Create a new user
 router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10)
@@ -88,7 +86,6 @@ router.post('/loginAdmin', async (req,res)=>{
         }
     })
     .then(async data=>{
-        console.log(data)
         const user = data[0].dataValues
         const validPassword = await bcrypt.compare(req.body.password, user.password)
         if(!validPassword){
