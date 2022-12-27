@@ -88,6 +88,7 @@ router.post('/loginAdmin', async (req,res)=>{
         }
     })
     .then(async data=>{
+        console.log(data)
         const user = data[0].dataValues
         const validPassword = await bcrypt.compare(req.body.password, user.password)
         if(!validPassword){
