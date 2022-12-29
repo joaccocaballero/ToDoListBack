@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT
       },
-      id: {
-        type: Sequelize.BIGINT
-      },
       description: {
         type: Sequelize.STRING
       },

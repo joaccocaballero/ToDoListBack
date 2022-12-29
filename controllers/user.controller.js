@@ -12,9 +12,7 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const password = await bcrypt.hash(req.body.password, salt)
     const newUser = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
+        username: req.body.username,
         password: password
     }
     const users = db.Users
@@ -32,22 +30,21 @@ router.post('/login', async (req, res) => {
     const users = db.Users
     users.findAll({
         where:{
-            email: req.body.email
+            username: req.body.username
         }
     })
     .then(async data=> {
         if(data){
             const user = data[0].dataValues
             const names = {
-                "firstName": data[0].dataValues.firstName,
-                "lastName": data[0].dataValues.lastName,
+                "username": data[0].dataValues.userName,
             }       
             const validPassword = await bcrypt.compare(req.body.password, user.password)
             if (!validPassword) {
                 res.status(401).send({message: 'User is not valid'})
             } else {
                 const token = jwt.sign({
-                    email: user.email,
+                    username: user.username,
                     id: user.id
                 }, process.env.TOKEN_SECRET, {expiresIn: '1000s'})
                 res.send({message: 'Successfully Log In',token,names})
@@ -62,9 +59,7 @@ router.post('/registerAdmin', async(req,res)=>{
     const salt = await bcrypt.genSalt(10)
     const password = await bcrypt.hash(req.body.password, salt)
     const newAdmin = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
+        username: req.body.username,
         password: password
     }
     const admins = db.AdminUser
@@ -82,7 +77,7 @@ router.post('/loginAdmin', async (req,res)=>{
     const admins = db.AdminUser
     admins.findAll({
         where:{
-            email: req.body.email
+            username: req.body.username
         }
     })
     .then(async data=>{
@@ -92,7 +87,7 @@ router.post('/loginAdmin', async (req,res)=>{
             res.status(401).send({message: 'User is not valid'})
         }else {
             const token = jwt.sign({
-                email: user.email,
+                username: user.username,
                 id: user.id
             }, process.env.TOKEN_SECRET, {expiresIn: '1000s'})
             res.send({message: 'Successful Log In', token})
@@ -133,7 +128,7 @@ router.get('/adminManager/getUsers', async(req,res)=>{
     const users = db.Users
     users.findAll(
         {
-            attributes: ['id','firstName', 'lastName','email']
+            attributes: ['id','username']
         }
     )
     .then(data => {res.send(data)})
