@@ -8,8 +8,8 @@ tasks at the bottom. Besides, it permits the user to keep track of their complet
   * **Backend Services:** https://joacoservices-com.onrender.com
 
 ## How to run this project locally
-This project uses PostgreSQL as database, a .env.example.txt file is provided in order to set database connection parameters.
-Then, run the following commands:
+This project uses PostgreSQL as database, a .env.example.txt file is provided in order to set database connection parameters. Once done, rename that file to '.env' and 
+then, run the following commands:
 
   ```
   npm install
