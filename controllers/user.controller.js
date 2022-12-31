@@ -9,20 +9,33 @@ const jwt = require('jsonwebtoken')
 
 //Create a new user
 router.post('/register', async (req, res) => {
-    const salt = await bcrypt.genSalt(10)
-    const password = await bcrypt.hash(req.body.password, salt)
-    const newUser = {
-        username: req.body.username,
-        password: password
-    }
     const users = db.Users
-    users.create(newUser)
-    .then(data => {
-        res.send({message: 'User created successfully'})
+    users.findAll({
+        where:{
+            username: req.body.username
+        }
     })
-    .catch(err => {
-        res.status(500).send({message: 'An error occurred, please try again'})
-    })
+    .then(async (data)=>{
+        if(data.length>0) {
+            res.status(400).send({message: 'Please choose a different username!'})
+        }
+        else{
+            const salt = await bcrypt.genSalt(10)
+            const password = await bcrypt.hash(req.body.password, salt)
+            const newUser = {
+                username: req.body.username,
+                password: password
+            }
+            users.create(newUser)
+            .then(data => {
+                res.send({message: 'User created successfully'})
+            })
+            .catch(err => {
+                res.status(500).send({message: 'An error occurred, please try again'})
+            })
+        }
+    }
+    )
 })
 
 //Authenticates a registered user
@@ -37,8 +50,9 @@ router.post('/login', async (req, res) => {
         if(data){
             const user = data[0].dataValues
             const names = {
-                username: data[0].dataValues.username,
-            }       
+                username: user.username,
+            }
+            console.log(names)
             const validPassword = await bcrypt.compare(req.body.password, user.password)
             if (!validPassword) {
                 res.status(401).send({message: 'User is not valid'})
@@ -56,20 +70,32 @@ router.post('/login', async (req, res) => {
 
 //Creates a new Admin User
 router.post('/registerAdmin', async(req,res)=>{
-    const salt = await bcrypt.genSalt(10)
-    const password = await bcrypt.hash(req.body.password, salt)
-    const newAdmin = {
-        username: req.body.username,
-        password: password
-    }
     const admins = db.AdminUser
-    admins.create(newAdmin)
-        .then(data => {
-            res.send({message: 'User created successfully'})
-        })
-        .catch(err => {
-            res.status(500).send({message: 'An error occurred, please try again'})
-        })
+    admins.findAll({
+        where:{
+            username: req.body.username
+        }
+    })
+    .then(async (data) => {
+        if(data.length>0){
+            res.status(400).send({message: 'Please choose a different username!'})
+        }
+        else {
+            const salt = await bcrypt.genSalt(10)
+            const password = await bcrypt.hash(req.body.password, salt)
+            const newAdmin = {
+                username: req.body.username,
+                password: password
+            }
+            admins.create(newAdmin)
+            .then((data) => {
+                res.send({message: 'User created successfully'})
+            })
+            .catch((err) => {
+                res.status(500).send({message: 'An error occurred, please try again'})
+            })
+        }
+    })
 })
 
 //Authenticates an Administrator
